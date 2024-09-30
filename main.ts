@@ -30,6 +30,19 @@ export default class TOCPlugin extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+
+	getHeadings() {
+		const activeMarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			//console.log(activeMarkdownView);
+			if(activeMarkdownView && activeMarkdownView.file){
+				const headings = this.app.metadataCache.getFileCache(activeMarkdownView.file)?.headings;
+				console.log("Headings received")
+				return headings;
+			} else{
+				console.error("No active file at the moment")
+				return null;
+			}
+	}
 }
 
 
