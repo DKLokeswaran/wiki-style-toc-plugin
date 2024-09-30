@@ -15,7 +15,12 @@ export default class TOCPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-
+		  this.registerMarkdownCodeBlockProcessor("toc", (source, el, ctx) => {
+			this.app.metadataCache.on('changed',()=> {
+				const headings=this.getHeadings()
+				console.log(headings)		
+			});
+		  });
 		
 	}
 
