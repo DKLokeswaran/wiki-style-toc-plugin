@@ -1,7 +1,7 @@
 {
 	"id": "table-of-contents",
 	"name": "Wiki style TOC",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"minAppVersion": "0.15.0",
 	"description": "Creates a dynamic Wikipedia style TOC for your notes",
 	"author": "Lokeswaran DK",
