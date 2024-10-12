@@ -1,69 +1,85 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {  HeadingCache, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { createRoot, Root } from 'react-dom/client';
+import TOC from './TOC'
 
-// Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
-	
-}
+// interface MyPluginSettings {
+// 	//TODO
+// }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	
-}
+// const DEFAULT_SETTINGS: MyPluginSettings = {
+// 	//TODO
+// }
 
 export default class TOCPlugin extends Plugin {
-	settings: MyPluginSettings;
+	//settings: MyPluginSettings;
 
 	async onload() {
-		await this.loadSettings();
+		// await this.loadSettings();
 		  this.registerMarkdownCodeBlockProcessor("toc", (source, el, ctx) => {
-			this.app.metadataCache.on('changed',()=> {
-				const headings=this.getHeadings()
-				console.log(headings)		
-			});
-		  });
-		
+
+			const root = createRoot(el);
+			this.renderTOC(root,ctx.sourcePath);
+			
+			this.app.workspace.on('editor-change',()=> {
+					this.renderTOC(root,ctx.sourcePath);			
+			});	
+
+		  });		
 	}
 
 	onunload() {
 
 	}
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	// async loadSettings() {
+	// 	this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	// }
+
+	// async saveSettings() {
+	// 	await this.saveData(this.settings);
+	// }
+
+	getHeadings(path:string) {
+		const currentFile = this.getFileByPath(path)
+		if(currentFile){
+			const headings = this.app.metadataCache.getFileCache(currentFile)?.headings;
+			return headings;
+		} else{
+			console.error("No active file at the moment")
+			return null;
+		}
 	}
 
-	async saveSettings() {
-		await this.saveData(this.settings);
+	getFileByPath(path:string){
+		return this.app.vault.getFileByPath(path)
 	}
 
-	getHeadings() {
-		const activeMarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			//console.log(activeMarkdownView);
-			if(activeMarkdownView && activeMarkdownView.file){
-				const headings = this.app.metadataCache.getFileCache(activeMarkdownView.file)?.headings;
-				console.log("Headings received")
-				return headings;
-			} else{
-				console.error("No active file at the moment")
-				return null;
-			}
-	}
-}
-
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: TOCPlugin;
-
-	constructor(app: App, plugin: TOCPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const {containerEl} = this;
-
-		containerEl.empty();
-
-
+	renderTOC(root:Root,filePath:string){
+		let headings:HeadingCache[]|undefined|null;
+		headings=this.getHeadings(filePath)
+		const file = this.getFileByPath(filePath)
+		root.render(<TOC headings={headings} filePath={filePath}/>)
+		if(headings===null && headings===undefined){
+			console.log("No Heading:",headings);
+		} 
 	}
 }
+
+
+// class SampleSettingTab extends PluginSettingTab {
+// 	plugin: TOCPlugin;
+
+// 	constructor(app: App, plugin: TOCPlugin) {
+// 		super(app, plugin);
+// 		this.plugin = plugin;
+// 	}
+
+// 	display(): void {
+// 		const {containerEl} = this;
+
+// 		containerEl.empty();
+
+
+// 	}
+// }
