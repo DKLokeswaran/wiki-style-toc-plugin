@@ -6,3 +6,20 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+ol { 
+    counter-reset: item; 
+    padding-left: 0px;
+    margin: 0px;
+}
+
+li{ display: block; }
+
+li:before { content: counters(item, ".") "."; 
+    counter-increment: item;
+}
+
+#content{
+    border: 1px solid #000000;
+    padding: 15px;
+    background-color: rgb(52, 52, 52);
+}
