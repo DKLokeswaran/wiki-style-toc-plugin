@@ -1,6 +1,6 @@
 import {  HeadingCache, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
-import TOC from './TOC'
+import TOC from './components/TOC'
 
 
 // interface MyPluginSettings {

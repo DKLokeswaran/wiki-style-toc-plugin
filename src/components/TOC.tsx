@@ -1,4 +1,4 @@
-import { TOCProps } from 'interfaces';
+import { TOCProps } from 'src/interfaces';
 import List from './List'
 
 

@@ -1,5 +1,5 @@
 import { HeadingCache } from "obsidian";
-import { LinkProps, HeadingMap } from 'interfaces';
+import { LinkProps, HeadingMap } from 'src/interfaces';
 
 
 
